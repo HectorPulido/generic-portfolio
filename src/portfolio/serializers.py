@@ -1,0 +1,54 @@
+import markdown
+from django.conf import settings
+from rest_framework import serializers
+
+from portfolio.models import Page, Section, Image
+
+
+class PageNavSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Page
+        fields = ["title", "slug", "priority"]
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+    url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Image
+        fields = ["title", "image", "description", "url"]
+
+    def get_image(self, obj):
+        return f"https://res.cloudinary.com/host9tuwc/{obj.image}"
+
+    def get_url(self, obj):
+        if obj.url:
+            return obj.url
+        return "#"
+
+
+class SectionSerializer(serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()
+    html_data = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Section
+        fields = ["title", "html_data", "images"]
+
+    def get_images(self, obj):
+        return ImageSerializer(obj.images.all(), many=True).data
+
+    def get_html_data(self, obj):
+        return markdown.markdown(obj.markdown)
+
+
+class CompletePageSerializer(serializers.ModelSerializer):
+    sections = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Page
+        fields = ["title", "slug", "description", "sections"]
+
+    def get_sections(self, obj):
+        return SectionSerializer(obj.sections.all(), many=True).data
