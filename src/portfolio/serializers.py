@@ -1,8 +1,7 @@
 import markdown
-from django.conf import settings
 from rest_framework import serializers
 
-from portfolio.models import Page, Section, Image
+from portfolio.models import Page, Section, Image, Config
 
 
 class PageNavSerializer(serializers.ModelSerializer):
@@ -13,7 +12,6 @@ class PageNavSerializer(serializers.ModelSerializer):
 
 class ImageSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
-    url = serializers.SerializerMethodField()
 
     class Meta:
         model = Image
@@ -21,11 +19,6 @@ class ImageSerializer(serializers.ModelSerializer):
 
     def get_image(self, obj):
         return f"https://res.cloudinary.com/host9tuwc/{obj.image}"
-
-    def get_url(self, obj):
-        if obj.url:
-            return obj.url
-        return "#"
 
 
 class SectionSerializer(serializers.ModelSerializer):
@@ -52,3 +45,9 @@ class CompletePageSerializer(serializers.ModelSerializer):
 
     def get_sections(self, obj):
         return SectionSerializer(obj.sections.all(), many=True).data
+
+
+class ConfigSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Config
+        fields = ["name", "data"]

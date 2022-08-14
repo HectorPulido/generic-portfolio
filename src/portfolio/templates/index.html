@@ -1,9 +1,5 @@
 {% extends 'base.html' %}
 
-{% block title %}
-{{page_data.title}}
-{% endblock title %}
-
 {% block content %}
 
 {% for section in page_data.sections %}
@@ -13,9 +9,13 @@
             {{section.html_data}}
         {% endautoescape %}
     </div>
-    <div>
+    <div class="mb-5">
         {% for image in section.images %}
-        <a href="{{image.url}}"><img src="{{image.image}}" alt="{{image.title}}"/></a>
+        {% if image.url %}
+            <a href="{{image.url}}"><img src="{{image.image}}" alt="{{image.title}}"/></a>
+        {% else %}
+            <img src="{{image.image}}" alt="{{image.title}}"/>
+        {% endif %}
         {% endfor %}
     </div>
 </div>

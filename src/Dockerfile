@@ -1,5 +1,5 @@
 # pull official base image
-FROM python:3.8-slim-buster
+FROM --platform=linux/amd64 python:3.8-slim-buster
 
 # set work directory
 WORKDIR /app
@@ -7,13 +7,10 @@ WORKDIR /app
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-ENV DEBUG 0
 
 # # install psycopg2
 RUN apt-get update \
     && apt-get install postgresql postgresql-contrib libpq-dev python-dev gcc -y
-
-RUN pip install psycopg2
 
 # install dependencies
 COPY ./requirements.txt .

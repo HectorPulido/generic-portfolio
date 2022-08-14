@@ -1,6 +1,6 @@
 from django.contrib import admin
 from nested_admin import NestedTabularInline, NestedModelAdmin
-from portfolio.models import Image, Page, Section
+from portfolio.models import Image, Page, Section, Config
 
 # Register your models here.
 class ImageInline(NestedTabularInline):
@@ -23,3 +23,5 @@ class PageAdmin(NestedModelAdmin):
 
 
 admin.site.register(Page, PageAdmin)
+admin.site.register(Config)
+admin.site.register(Image)
