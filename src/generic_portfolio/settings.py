@@ -89,7 +89,7 @@ DATABASES = {
     }
 }
 
-DATABASE_URL = "postgres://vitaaqxsackavp:e8af177595f7fc04e4cbbd973c617e9d6ee569bb7693bca866be3c702befea2c@ec2-34-193-44-192.compute-1.amazonaws.com:5432/d9ttdrfoqvh1u8"  # os.environ.get("DATABASE_URL")
+DATABASE_URL = os.environ.get("DATABASE_URL")
 db_from_env = dj_database_url.config(
     default=DATABASE_URL, conn_max_age=500, ssl_require=True
 )

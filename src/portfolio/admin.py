@@ -2,6 +2,7 @@ from django.contrib import admin
 from nested_admin import NestedTabularInline, NestedModelAdmin
 from portfolio.models import Image, Page, Section, Config
 
+
 # Register your models here.
 class ImageInline(NestedTabularInline):
     model = Image

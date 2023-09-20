@@ -6,7 +6,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = []
@@ -24,7 +23,10 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("name", models.CharField(db_index=True, max_length=100, unique=True)),
+                (
+                    "name",
+                    models.CharField(db_index=True, max_length=100, unique=True),
+                ),
                 ("data", models.TextField()),
                 ("enabled", models.BooleanField(db_index=True, default=False)),
             ],
@@ -94,7 +96,10 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("description", models.TextField(blank=True, null=True)),
-                ("url", models.CharField(blank=True, max_length=200, null=True)),
+                (
+                    "url",
+                    models.CharField(blank=True, max_length=200, null=True),
+                ),
                 (
                     "section",
                     models.ForeignKey(

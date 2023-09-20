@@ -27,13 +27,13 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
         config_data = Config.objects.filter(enabled=True)
         config_data = ConfigSerializer(config_data, many=True).data
         data_dict = {}
-        
-        for data in config_data:
-            if 'markdown' in data['name']:
-                data['data'] = markdown.markdown(data['data'])
 
-            data_dict[data['name']] = data['data']
-        
+        for data in config_data:
+            if "markdown" in data["name"]:
+                data["data"] = markdown.markdown(data["data"])
+
+            data_dict[data["name"]] = data["data"]
+
         return data_dict
 
     def list(self, request, *args, **kwargs):
@@ -49,7 +49,11 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
             self.queryset.order_by("-priority"), many=True
         ).data
 
-        data = {"page_data": page_data, "nav_data": nav_data, "extra_data": self.config()}
+        data = {
+            "page_data": page_data,
+            "nav_data": nav_data,
+            "extra_data": self.config(),
+        }
 
         return Response(data)
 
@@ -67,6 +71,10 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
             self.queryset.order_by("-priority"), many=True
         ).data
 
-        data = {"page_data": page_data, "nav_data": nav_data, "extra_data": self.config()}
+        data = {
+            "page_data": page_data,
+            "nav_data": nav_data,
+            "extra_data": self.config(),
+        }
 
         return Response(data)
