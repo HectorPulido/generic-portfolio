@@ -14,5 +14,4 @@ RUN apk add --no-cache gcc postgresql-dev
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN adduser -D myuser
-USER myuser
+COPY . .

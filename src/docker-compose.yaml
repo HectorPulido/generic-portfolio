@@ -2,8 +2,6 @@ services:
   web:
     build: .
     command: ./entrypoint.sh
-    volumes:
-      - ./:/app
     depends_on:
       - portfoliodb
     networks:
