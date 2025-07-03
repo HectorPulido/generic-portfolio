@@ -4,20 +4,15 @@
 
 {% for section in page_data.sections %}
 <div>
-    <div>
-        {% autoescape off %}
-            {{section.html_data}}
-        {% endautoescape %}
-    </div>
-    <div class="mb-5">
-        {% for image in section.images %}
-        {% if image.url %}
-            <a href="{{image.url}}"><img src="{{image.image}}" alt="{{image.title}}"/></a>
-        {% else %}
-            <img src="{{image.image}}" alt="{{image.title}}"/>
-        {% endif %}
-        {% endfor %}
-    </div>
+    {% if section.image_position == 'top' %}
+    {% include 'section_images.html' %}
+    {% endif %}
+
+    <div>{% autoescape off %}{{ section.html_data }}{% endautoescape %}</div>
+
+    {% if section.image_position == 'bottom' %}
+    {% include 'section_images.html' %}
+    {% endif %}
 </div>
 {% endfor %}
 

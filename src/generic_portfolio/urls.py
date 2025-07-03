@@ -13,12 +13,26 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+from django.conf import settings
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import path, include, re_path
+from django.conf.urls.static import static
+
+from portfolio.views import ArbitraryFileView
 
 urlpatterns = [
+    re_path(
+        r"^(?P<slug>[-\w]+)\.(?P<ext>[-\w]+)$",
+        ArbitraryFileView.as_view(),
+        name="arbitrary-file",
+    ),
     path("admin/", admin.site.urls),
     path("_nested_admin/", include("nested_admin.urls")),
     path("api-auth/", include("rest_framework.urls")),
     path("", include("portfolio.urls")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

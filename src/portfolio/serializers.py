@@ -7,7 +7,7 @@ from portfolio.models import Page, Section, Image, Config
 class PageNavSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
-        fields = ["title", "slug", "priority"]
+        fields = ["title", "slug", "priority", "mode", "external_url"]
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -15,10 +15,10 @@ class ImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Image
-        fields = ["title", "image", "description", "url"]
+        fields = ["title", "image", "description", "url", "display_style"]
 
     def get_image(self, obj):
-        return f"https://res.cloudinary.com/host9tuwc/{obj.image}"
+        return obj.image.url
 
 
 class SectionSerializer(serializers.ModelSerializer):
@@ -27,7 +27,7 @@ class SectionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Section
-        fields = ["title", "html_data", "images"]
+        fields = ["title", "html_data", "images", "image_position"]
 
     def get_images(self, obj):
         return ImageSerializer(obj.images.all(), many=True).data

@@ -1,0 +1,9 @@
+{% for image in section.images %}
+{% if image.url %}
+<a href="{{image.url}}"><img src="{{image.image}}" alt="{{image.title}}"
+        class="{% if image.display_style == 'round' %}img-circle{% else %}img-rect{% endif %}" /></a>
+{% else %}
+<img src="{{image.image}}" alt="{{image.title}}"
+    class="{% if image.display_style == 'round' %}img-circle{% else %}img-rect{% endif %}" />
+{% endif %}
+{% endfor %}

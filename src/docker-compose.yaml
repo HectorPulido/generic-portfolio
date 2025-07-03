@@ -1,0 +1,31 @@
+services:
+  web:
+    build: .
+    command: ./entrypoint.sh
+    volumes:
+      - ./:/app
+    depends_on:
+      - portfoliodb
+    networks:
+      - portfolio
+    ports:
+      - "9900:8000"
+    environment:
+      DJANGO_SUPERUSER_PASSWORD: "testpassword"
+      DJANGO_SUPERUSER_EMAIL: "example@example.com"
+      DJANGO_SUPERUSER_USERNAME: "admin"
+  portfoliodb:
+    image: "postgres:16"
+    container_name: portfoliodb
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - .db_data:/var/lib/postgresql/data
+    networks:
+      - portfolio
+
+networks:
+  portfolio:
+    external: false

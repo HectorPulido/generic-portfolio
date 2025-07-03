@@ -1,6 +1,8 @@
+import mimetypes
 import markdown
-from django.http import Http404
-from django.shortcuts import get_object_or_404
+from django.views import View
+from django.shortcuts import get_object_or_404, redirect
+from django.http import FileResponse, Http404
 
 from rest_framework.response import Response
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -12,7 +14,7 @@ from portfolio.serializers import (
     ConfigSerializer,
 )
 
-from portfolio.models import Page, Config
+from portfolio.models import ArbitraryFile, Page, Config
 
 
 class PageViewSet(viewsets.ReadOnlyModelViewSet):
@@ -46,7 +48,7 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
 
         # Nav
         nav_data = self.page_nav_serializer(
-            self.queryset.order_by("-priority"), many=True
+            self.queryset.filter(show_in_nav=True).order_by("-priority"), many=True
         ).data
 
         data = {
@@ -66,6 +68,9 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
         current_page = get_object_or_404(Page, slug=page_slug)
         page_data = self.page_serializer(current_page).data
 
+        if current_page.mode == "external":
+            return redirect(current_page.external_url)
+
         # Nav
         nav_data = self.page_nav_serializer(
             self.queryset.order_by("-priority"), many=True
@@ -78,3 +83,23 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
         }
 
         return Response(data)
+
+
+class ArbitraryFileView(View):
+    """
+    Sirve archivos subidos en ArbitraryFile.
+    URL ejemplos: /foo.txt  o /documento.pdf
+    """
+
+    def get(self, request, slug, ext):
+        # Busca por slug
+        try:
+            arb = ArbitraryFile.objects.get(slug=slug)
+        except ArbitraryFile.DoesNotExist as e:
+            raise Http404("No existe ese archivo") from e
+
+        path = arb.file.path
+        # Determina content-type a partir de la extensión
+        content_type, _ = mimetypes.guess_type(path)
+        content_type = content_type or "application/octet-stream"
+        return FileResponse(open(path, "rb"), content_type=content_type)
